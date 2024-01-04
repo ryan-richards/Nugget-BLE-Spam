@@ -3,7 +3,7 @@
 #include "SH1106.h"
 #include "graphics.h"
 
-SH1106Wire display(0x3C, 33, 35);
+SH1106Wire display(0x3C, 35, 36);
 
 const char* Screen::sectionText = "NUGGET BLE SPAM"; // Define and initialize sectionText
 

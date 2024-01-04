@@ -14,6 +14,42 @@ const int numButtons = sizeof(buttonPins) / sizeof(buttonPins[0]);
 Bounce buttons[numButtons];
 
 int lastPressedButton = -1;
+int selectedPacket = 0;
+
+
+const char* deviceNames[] = {
+  "Airpods",
+  "Airpods Pro",
+  "Airpods Max",
+  "Airpods Gen 2",
+  "Airpods Gen 3",
+  "Airpods Pro Gen 2",
+  "Power Beats",
+  "Power Beats Pro",
+  "Beats Solo Pro",
+  "Beats Studio Buds",
+  "Beats Flex",
+  "Beats X",
+  "Beats Solo 3",
+  "Beats Studio 3",
+  "Beats Studio Pro",
+  "Betas Fit Pro",
+  "Beats Studio Buds Plus",
+  "AppleTV Setup",
+  "AppleTV Pair",
+  "AppleTV New User",
+  "AppleTV AppleID Setup",
+  "AppleTV Wireless Audio Sync",
+  "AppleTV Homekit Setup",
+  "AppleTV Keyboard Setup",
+  "AppleTV Connecting to Network",
+  "Homepod Setup",
+  "Setup New Phone",
+  "Transfer Number",
+  "TV Color Balance"
+};
+
+int numPackets = sizeof(deviceNames) / sizeof(deviceNames[0]);
 
 Buttons::Buttons() {
 }
@@ -45,14 +81,18 @@ void Buttons::updateButtons() {
           Screen::displayBluetoothOff();
           break;
         case 2: // Button 2 (lt_btn) was pressed
+          selectedPacket = (selectedPacket - 1 + numPackets) % numPackets;
+          updateScreenWithActiveSSID();
           break;
         case 3: // Button 3 (rt_btn) was pressed
+          selectedPacket = (selectedPacket + 1) % numPackets;
+          updateScreenWithActiveSSID();
           break;
       }
     }
   }
 }
 
-/* void Buttons::updateScreenWithActiveSSID() {
-  Screen::updateSectionText();
-} */
+void Buttons::updateScreenWithActiveSSID() {
+  Screen::updateSectionText(deviceNames[selectedPacket]);
+}

@@ -1,7 +1,7 @@
 #include <Adafruit_NeoPixel.h>
 #include "NeoPixel.h"
 
-Adafruit_NeoPixel strip{ 1, 12, NEO_GRB + NEO_KHZ800 };
+Adafruit_NeoPixel strip{ 1, 10, NEO_GRB + NEO_KHZ800 };
 
 NeoPixel::NeoPixel() {
 }

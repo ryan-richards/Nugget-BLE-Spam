@@ -6,12 +6,14 @@
 extern const int buttonPins[];
 extern const int numButtons;
 extern int lastPressedButton;
+extern int selectedPacket;
 
 class Buttons {
 public:
   Buttons();
   static void setupButtons();
   static void updateButtons();
+  static void updateScreenWithActiveSSID();
 };
 
 #endif

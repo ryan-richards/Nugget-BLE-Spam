@@ -46,7 +46,9 @@ const char* deviceNames[] = {
   "Homepod Setup",
   "Setup New Phone",
   "Transfer Number",
-  "TV Color Balance"
+  "TV Color Balance",
+  "Random Spam",
+  "Extended Attack"
 };
 
 int numPackets = sizeof(deviceNames) / sizeof(deviceNames[0]);

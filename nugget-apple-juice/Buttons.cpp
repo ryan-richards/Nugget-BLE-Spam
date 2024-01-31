@@ -47,8 +47,10 @@ const char* deviceNames[] = {
   "Setup New Phone",
   "Transfer Number",
   "TV Color Balance",
+  "Apple Vision Pro",
   "Random Spam",
-  "Extended Attack"
+  "Extended Attack",
+  "Flipper Zero"
 };
 
 int numPackets = sizeof(deviceNames) / sizeof(deviceNames[0]);

